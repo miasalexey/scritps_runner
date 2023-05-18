@@ -101,7 +101,7 @@ func checkPasswordsUseSSH(ip string, login string, passwords map[string]string) 
 	}
 
 	for title, password := range passwords {
-		config := &ssh.ClientConfig{
+		sshConfig := &ssh.ClientConfig{
 			User: login,
 			Auth: []ssh.AuthMethod{
 				ssh.Password(password),
@@ -110,7 +110,7 @@ func checkPasswordsUseSSH(ip string, login string, passwords map[string]string) 
 			Timeout:         3 * time.Second,
 		}
 
-		client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", ip, 22), config)
+		client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", ip, 22), sshConfig)
 		if err != nil {
 			continue
 		} else {
