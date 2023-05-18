@@ -1,0 +1,4 @@
+#rename to config.yaml
+keepassFile: #path file
+keepassPassword:
+serverPort:

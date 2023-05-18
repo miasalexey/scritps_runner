@@ -19,13 +19,13 @@ func NewHandler() handlers.Handlers {
 }
 
 func (h *handler) Register(router *gin.Engine) {
-	router.GET("/enable_winbox", h.EnableWinbox)
+	router.GET("/enable_winbox", h.enableWinbox)
 }
 
-func (h *handler) EnableWinbox(c *gin.Context) {
+func (h *handler) enableWinbox(context *gin.Context) {
 	var mikrotik EnableWinboxDTO
-	if err := c.ShouldBindJSON(&mikrotik); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+	if err := context.ShouldBindJSON(&mikrotik); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
 			"error": "can't parse structure",
 		})
 	}
@@ -42,7 +42,7 @@ func (h *handler) EnableWinbox(c *gin.Context) {
 	client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", host, port), config)
 	if err != nil {
 		res := fmt.Sprintf("can't connect to %s", host)
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 
 			"error": res,
 		})
@@ -52,7 +52,7 @@ func (h *handler) EnableWinbox(c *gin.Context) {
 	session, err := client.NewSession()
 	if err != nil {
 		res := fmt.Sprintf("can't connect to %s", host)
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 
 			"error": res,
 		})
@@ -74,7 +74,7 @@ func (h *handler) EnableWinbox(c *gin.Context) {
 	_, err = session.CombinedOutput(command)
 	if err != nil {
 		log.Printf("Failed to execute command '%s': %v", command, err)
-		c.JSON(http.StatusBadRequest, gin.H{
+		context.JSON(http.StatusBadRequest, gin.H{
 
 			"error": "res",
 		})
@@ -82,7 +82,7 @@ func (h *handler) EnableWinbox(c *gin.Context) {
 	}
 
 	res := fmt.Sprintf("winbox enabled on host %s enabled successfully", host)
-	c.JSON(http.StatusOK, gin.H{
+	context.JSON(http.StatusOK, gin.H{
 		"response": res,
 	})
 }
